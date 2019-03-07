@@ -19,22 +19,15 @@ public class Main {
     public static TourPopUp tourPopUp;
     public static boolean game = false;
     
-    public static void main(String[] args) throws InterruptedException {
-        current = new Tableau(50);
+    public static void main(String[] args) throws InterruptedException, Exception {
+        current = new Tableau(20);
         tourPopUp = new TourPopUp(current);
         
-        current.plateau.get(0).get(1).vivante = true;
-        current.plateau.get(1).get(1).vivante = true;
-        current.plateau.get(2).get(1).vivante = true;
-        
+        tourPopUp.fileLoader("sauvegarde.txt");
+
         var compteur = 0;
         
         while(game) {
-                 
-            //Display.Affichage(current.taille, current.plateau);
-            
-            //current.nextStep(current.taille, current.plateau);
-
             compteur += 1;
             sleep(1000);
         }

@@ -88,4 +88,39 @@ public class Tableau extends Observable {
             cellule.next = false;
         }
     }
+    
+    public String toString(){
+        String str = "";
+        for(int i = 0; i<this.taille; i++){
+            str += "|";
+            for(int j = 0; j<this.taille; j++) {
+                if (this.plateau.get(i).get(j).vivante){str += "X|";}
+                else {str += "O|";}
+            }
+            str += "\r\n";
+        }
+        return str;
+    }
+    
+    public void toRead(String str){
+        int i =0;
+        int j = 0;
+        
+        for(int k=0; k<str.length(); k++){
+            if (str.charAt(k) == 'O'){
+                this.plateau.get(i).get(j).vivante = false;
+                j++;
+            }
+            if (str.charAt(k) == 'X'){
+                this.plateau.get(i).get(j).vivante = true;
+                j++;
+            }
+            if (j == this.taille){
+                i++;
+                j = 0;
+            }
+        }
+        setChanged();
+        notifyObservers();
+    }
 }

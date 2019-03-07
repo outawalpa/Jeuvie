@@ -14,9 +14,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import javax.swing.JButton;
@@ -29,10 +36,12 @@ import jeuDeLaVie.Tableau;
  *
  * @author Delac
  */
-public class TourPopUp extends JFrame implements Observer, ActionListener, Runnable{
+public class TourPopUp extends JFrame implements Observer, ActionListener, Runnable {
     JButton start = new JButton("START");
     JButton stop = new JButton("STOP");
     JButton step = new JButton("NEXT");
+    JButton print = new JButton("PRINT");
+    JButton load = new JButton("LOAD");
     Container container = new Container();
     
     public TourPopUp(Tableau tableau) {
@@ -48,17 +57,23 @@ public class TourPopUp extends JFrame implements Observer, ActionListener, Runna
         for (int i = 0 ; i < tableau.taille ; i++){
             table.getColumnModel().getColumn(i).setCellRenderer(new MyRenderer());
             table.getColumnModel().getColumn(i).setPreferredWidth(10);
-            table.setRowHeight(i, 10);
+            table.setRowHeight(i, 22);
         }
         add(table, BorderLayout.CENTER);
         
-        container.setLayout(new GridLayout(1, 3));
+        table.setBorder(BorderFactory.createLineBorder(Color.black));
+        
+        container.setLayout(new GridLayout(1, 5));
         container.add(step);
         step.addActionListener(this);
         container.add(start);
         start.addActionListener(this);
         container.add(stop);
         stop.addActionListener(this);
+        container.add(print);
+        print.addActionListener(this);
+        container.add(load);
+        load.addActionListener(this);
         add(container, BorderLayout.SOUTH);
        
         table.addMouseListener(new java.awt.event.MouseAdapter(){
@@ -80,20 +95,38 @@ public class TourPopUp extends JFrame implements Observer, ActionListener, Runna
     }
 
         @Override
-    public void actionPerformed(ActionEvent event) {
+    public void actionPerformed(ActionEvent event){
         if(event.getSource().equals(step)) {
-            System.out.println("Step");
             Main.current.nextStep(current.taille, current.plateau);
         }
-        if(event.getSource().equals(start)) {                                   // Using multi-thread to exectute a separate thread
-            System.out.println("Start");
+        if(event.getSource().equals(start)) {                                   
             if (Main.game == false) {
                 Main.game = true;
+                Thread t = new Thread(this);
+                t.start();
             }
         }
         if(event.getSource().equals(stop)) {
-            System.out.println("Stop");
             Main.game = false;
+            try {
+                fileWriter("sauvegarde.txt");
+            } catch (Exception ex) {
+                Logger.getLogger(TourPopUp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if(event.getSource().equals(print)) {
+            try {
+                fileWriter("jeuDeLaVie.txt");
+            } catch (Exception ex) {
+                Logger.getLogger(TourPopUp.class.getName()).log(Level.SEVERE, null, ex);
+            }  
+        }
+        if(event.getSource().equals(load)) {
+            try {
+                fileLoader("jeuDeLaVie.txt");
+            } catch (Exception ex) {
+                Logger.getLogger(TourPopUp.class.getName()).log(Level.SEVERE, null, ex);
+            }  
         }
     }
 
@@ -108,6 +141,27 @@ public class TourPopUp extends JFrame implements Observer, ActionListener, Runna
                 ex.printStackTrace();
             }
         }
+    }
+    
+    public void fileWriter(String str) throws Exception {
+        FileWriter fileWriter = new FileWriter(str);
+        BufferedWriter writer = new BufferedWriter(fileWriter);
+        writer.write(Main.current.toString());
+        writer.close();
+    }
+    
+    public void fileLoader(String str) throws Exception {
+        FileReader fileReader = new FileReader(str);
+        BufferedReader reader = new BufferedReader(fileReader);
+        String ligne = "";
+        String text = "";
+        while ((ligne=reader.readLine())!=null){
+            for(int i = 0; i < ligne.length(); i++){
+                char c = ligne.charAt(i);
+            }
+            text += ligne;
+        }
+        Main.current.toRead(text);
     }
 
 }

@@ -20,16 +20,9 @@ public class Main {
     public static boolean game = false;
     
     public static void main(String[] args) throws InterruptedException, Exception {
-        current = new Tableau(20);
-        tourPopUp = new TourPopUp(current);
+        current = new Tableau(20); //Créé un plateau
+        tourPopUp = new TourPopUp(current); //Créé la fenêtre
         
-        tourPopUp.fileLoader("sauvegarde.txt");
-
-        var compteur = 0;
-        
-        while(game) {
-            compteur += 1;
-            sleep(1000);
-        }
+        tourPopUp.fileLoader("sauvegarde.txt"); //Charge la partie
     }
 }

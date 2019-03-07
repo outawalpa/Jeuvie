@@ -5,17 +5,15 @@
  */
 package jeuDeLaVie;
 
-import java.util.ArrayList;
-
 /**
  *
  * @author Delac
  */
 public class Cellule {
-    public boolean vivante;
-    public boolean next;
-    public int x;
-    public int y;
+    public boolean vivante; //Etat de la cellule
+    public boolean next; //Prochain état de la cellule
+    public int x; //Position x
+    public int y; //Position y
     
     public Cellule (boolean bool, int x, int y) {
         this.vivante = bool; 

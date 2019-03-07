@@ -17,44 +17,47 @@ public class Tableau extends Observable {
     public static ArrayList<ArrayList<Cellule>> plateau = new ArrayList();
     
     public Tableau (int taille) {
-        this.taille = taille;
-        this.plateau = new ArrayList();
+        this.taille = taille; //taille du plateau (c'est un carré)
+        this.plateau = new ArrayList(); //Créé le plateau
         for (int i = 0 ; i < taille ; i++) {
-            ArrayList<Cellule> ligne = new ArrayList();
+            ArrayList<Cellule> ligne = new ArrayList(); //Créé un tableau de "cellule"
             for (int j=0; j < taille ; j++) {
-                Cellule newCellule = new Cellule(false, i, j);
-                ligne.add(newCellule);
+                Cellule newCellule = new Cellule(false, i, j); //Créé une cellule
+                ligne.add(newCellule); //Ajoute la cellule au tableau
             }
-            plateau.add(ligne);
+            plateau.add(ligne); //Ajoute le tableau au plateau
         }
     }
     
+    //Change l'état des cellules
     public void nextStep (int taille, ArrayList<ArrayList<Cellule>> current) {
         
         for (int i = 0 ; i < taille ; i++) {
             for (int j=0; j < taille ; j++) {
-                test(taille, current, current.get(i).get(j));
+                test(taille, current, current.get(i).get(j)); //Test si la cellule doit changer d'état
             }
         }
         
         for (int i = 0 ; i < taille ; i++) {
             for (int j=0; j < taille ; j++) {
-                current.get(i).get(j).vivante = current.get(i).get(j).next;
+                current.get(i).get(j).vivante = current.get(i).get(j).next; //Change l'état de la cellule
             }
         }
+        
         setChanged();
         notifyObservers();   
     }
     
-    
+    //Test le futur état des cellules
     public void test(int taille, ArrayList<ArrayList<Cellule>> current, Cellule cellule){
-        int compteur = 0;
+        int compteur = 0;//Compte le nombre de voisine "vivante"
         
         int a = (cellule.x)+1;
         int b = (cellule.x)-1;
         int c = (cellule.y)+1;
         int d = (cellule.y)-1;
         
+        //Test si les cellules autour sont "vivantes"
         if (a>=0 && a<taille && d>=0 && d<taille && current.get(a).get(d).vivante) {
             compteur += 1;
         }
@@ -80,7 +83,7 @@ public class Tableau extends Observable {
             compteur += 1;
         }
         
-        
+        //Assigne le futur état de la cellule
         if (compteur == 3 || (cellule.vivante == true && compteur == 2)){
             cellule.next = true;
         }
@@ -89,6 +92,7 @@ public class Tableau extends Observable {
         }
     }
     
+    //Créé une chaine de caractère en fonction du plateau
     public String toString(){
         String str = "";
         for(int i = 0; i<this.taille; i++){
@@ -102,6 +106,7 @@ public class Tableau extends Observable {
         return str;
     }
     
+    //Change le plateau en fonction de la chaine de caractère
     public void toRead(String str){
         int i =0;
         int j = 0;

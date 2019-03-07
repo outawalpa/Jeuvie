@@ -2,7 +2,6 @@ package interfaceGraphique;
 
 import java.awt.Color;
 import java.awt.Component;
-import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import jeuDeLaVie.Tableau;
@@ -17,6 +16,7 @@ public class MyRenderer extends DefaultTableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
+        //Change la couleur des cellules en fonction de son état
         if (Tableau.plateau.get(row).get(column).vivante) {
             Color clr = new Color(0, 0, 0);
             component.setBackground(clr);
